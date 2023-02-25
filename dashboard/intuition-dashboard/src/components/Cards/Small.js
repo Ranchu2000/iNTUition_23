@@ -5,7 +5,7 @@ const Small = () => {
   return (
     <div className='small-container'>
         <span className='card-icon'>
-            <FaChartBar size={40}/>
+            <FaChartBar size={30}/>
         </span>
         <h3 className='card-title'>
             Analytics

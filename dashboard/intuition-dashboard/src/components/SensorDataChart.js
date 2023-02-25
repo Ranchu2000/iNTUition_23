@@ -24,10 +24,8 @@ const SensorChart = () => {
     // Sends a trigger payload to the Node backend to prompt the server to return data from the ESP32
     // Return data is an array of 4 JS objects
     const dat = {type: "import",}
-    const demo = {type: "demo",}
     ws.current.onopen = (event) => {
       ws.current.send(JSON.stringify(dat))
-      ws.current.send(JSON.stringify())
     }
 
     ws.current.onmessage = (ev) => {
@@ -105,7 +103,7 @@ const SensorChart = () => {
   //Display the chart using rechart.js
   return (
     <Container className="p-3">
-        <h1 className="graph-header">Real time IOT Sensor Data</h1>
+        <h1 className="graph-header">Daily dispense tracker</h1>
       <Row className="justify-content-md-center">
         <div style={{ width: 500, height: 200 }}>
           <ResponsiveContainer>
