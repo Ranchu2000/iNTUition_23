@@ -3,9 +3,7 @@ import { parse } from "url";
 import { WebSocketServer } from "ws";
 
 //configurables
-var onceTiming=["1200"];
-var twiceTiming=["1200","1400"];
-var thriceTiming=["0800","1200","1800"];
+var timings=["0800","1200","1800"];
 
 // Create the https server
 const server = createServer();
@@ -15,7 +13,6 @@ const server = createServer();
 const wss1 = new WebSocketServer({ noServer: true });
 const wss2 = new WebSocketServer({ noServer: true });
 
-//function to print stuff, send back to front end, logic to do backend
 // Take note of client or users connected
 const users = new Set();
 
@@ -43,7 +40,7 @@ class pillState{
     this.count-=this.dispenseQty;
     var current = new Date;
     var month= current.getMonth();
-    var hour= current.getDate();
+    var hour= current.getHours();
     var key= month+','+hour;
     //console.log(current.getHours());
     if (key in this.history){
@@ -59,6 +56,19 @@ dataState.push(new pillState("Pill_B"));
 dataState.push(new pillState("Pill_C"));
 dataState.push(new pillState("Liquid"));
 
+//logic for pill dispensing
+var tracking=false;
+for (var i=0; i<dataState.length(); i++){
+  if (dataState[i].track){
+    tracking==true;
+    break;
+  }
+}
+if (tracking){
+  var current = new Date;
+  var hour= current.getHours();
+}
+
 wss1.on("connection", function connection(socket) {
   console.log("wss1:: User connected");
   const userRef = {
@@ -66,30 +76,45 @@ wss1.on("connection", function connection(socket) {
     connectionDate: Date.now(),
   };
   users.add(userRef);
-
   socket.on('message', function message (data){
     const parseData = JSON.parse(data);
-    if (parseData==="import"){
+    if (parseData==="import"){ //{"import"}
       sendData(); //send import to get data
-    }else{ //data sent is to update State
-      switch (data.name){
+    }else if (parseData.type==="init"){ //data sent is to update State==> ONE AT A TIME {type:"init", count: qty, freq: qty, dispenseQty: qty, meal: bool}
+      switch (parseData.name){
         case "A":
-          dataState[0].track(data.count, data.freq, data.dispenseQty, data.meal);
+          dataState[0].track(parseData.count, parseData.freq, parseData.dispenseQty, parseData.meal);
           break;
         case "B":
-          dataState[1].track(data.count, data.freq, data.dispenseQty, data.meal);
+          dataState[1].track(parseData.count, parseData.freq, parseData.dispenseQty, parseData.meal);
           break;
         case "C":
-          dataState[2].track(data.count, data.freq, data.dispenseQty, data.meal);
+          dataState[2].track(parseData.count, parseData.freq, parseData.dispenseQty, parseData.meal);
           break;
         case "L":
-          dataState[3].track(data.count, data.freq, data.dispenseQty, data.meal);
+          dataState[3].track(parseData.count, parseData.freq, parseData.dispenseQty, parseData.meal);
           break;  
       }
+    }else if (parseData.type=="refill"){ //data sent is to refill pills==> ONE AT A TIME {type:"refill", refill: qty}
+      switch (parseData.name){
+        case "A":
+          dataState[0].refill(parseData.refill);
+          break;
+        case "B":
+          dataState[1].refill(parseData.refill);
+          break;
+        case "C":
+          dataState[2].refill(parseData.refill);
+          break;
+        case "L":
+          dataState[3].refill(parseData.refill);
+          break;  
+      }
+    }else if (parseData.type=="setting"){
+      timings= parseData.timings;
     }
   })
 });
-
 
 wss2.on("connection", function connection(ws) {
   console.log("wss2:: socket connection ");
