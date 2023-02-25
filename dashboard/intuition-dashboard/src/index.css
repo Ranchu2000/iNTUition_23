@@ -121,7 +121,6 @@ body {
 
 .medium-container {
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   margin-left: 270px;
   margin-top: 20px;
@@ -138,23 +137,21 @@ body {
 
 .card-title {
   font-weight: bolder;
-  font-size: 25px;
+  font-size: 20px;
   padding-top: 20px;
   padding-left: 25px;
 }
 
 .card-container {
-  position: absolute;
   display: flex;
   justify-content: space-around;
-  padding-top: 20px;
   height: 300px;
   width: 750px;
 }
 
 .card-subcontainer {
   background: #8AC7DB;
-  margin-top: 70px;
+  margin-top: 30px;
   margin-bottom: 20px;
   border-radius: 30px;
   width: 150px;
@@ -164,6 +161,7 @@ body {
   justify-content: center;
   color: #ffffff;
   padding-top: 10px;
+  height: 200px;
 }
 
 .card-subcontainer:hover {
@@ -277,6 +275,35 @@ body {
   text-decoration: none;
   font-size: 15px;
   font-family: inherit;
+}
+
+.btn-addmed {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+  color: #00D100;
+  width: 130px;
+}
+
+.btn-addmed:hover {
+  color: black;
+}
+
+.btn-addmed {
+  outline: none;
+}
+
+.btn-addmed:active {
+  transform: scale(0.98);
 }
 
 .btn:hover {
@@ -462,9 +489,13 @@ input:checked + .slider:before {
   margin-bottom: 20px;
 }
 
-.large-header {
+.card-header {
   display: flex;
   width: 100%;
-  background: red;
   height: 50px;
+  align-items: center;
+}
+
+.card-header-btn {
+  margin-left: auto;
 }
