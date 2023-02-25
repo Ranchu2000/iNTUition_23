@@ -199,6 +199,7 @@ body {
 .wrapper {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .small-container {
@@ -217,4 +218,31 @@ body {
   display: flex;
   margin-top: 75px;
   margin-left: 65px;
+  cursor: pointer;
+}
+
+.large-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 270px;
+  margin-top: 20px;
+  width: 100%;
+  margin-right: 40px;
+  background: #ffffff;
+  height: 320px;
+  border-radius: 30px;
+}
+
+.add-medicine {
+  display: flex;
+  margin-left: 380px;
+  margin-top: 25px;
+  height: 26px;
+  padding: 3px;
+}
+
+.add-medicine-text {
+  padding-left: 10px;
+  color: #50C878;
 }

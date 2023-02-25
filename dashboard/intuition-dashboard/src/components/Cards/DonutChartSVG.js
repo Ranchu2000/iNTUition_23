@@ -26,6 +26,9 @@ const DonutChartSVG = () => {
           legend={false}
           strokeColor='white'
           colors={['steelblue']}
+          formatValues={
+            (values, total) => `${(values / total * 100).toFixed(0)}%`
+          }
         />
     </div>
   )

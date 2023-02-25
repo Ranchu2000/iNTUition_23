@@ -1,8 +1,10 @@
-import React from 'react'
+
 
 const Large = () => {
   return (
-    <div>Large</div>
+    <div className='large-container'>
+
+    </div>
   )
 }
 
