@@ -57,16 +57,47 @@ dataState.push(new pillState("Pill_C"));
 dataState.push(new pillState("Liquid"));
 
 //logic for pill dispensing
-var tracking=false;
+var tracking=true;
+var maxFreq=0;
+var monitor=[];
 for (var i=0; i<dataState.length; i++){
+  if (dataState[i].freq==1 && dataState[i].track){
+    if (maxFreq==0){
+      maxFreq=1;
+    }
+  }else if (dataState[i].freq==2 && dataState[i].track){
+    if (maxFreq<=1){
+      maxFreq=2;
+    }
+  }else if (dataState[i].freq==3 && dataState[i].track){
+    if (maxFreq<=2){
+      maxFreq=3;
+    };
+  }
   if (dataState[i].track){
     tracking==true;
-    break;
   }
 }
+
 if (tracking){
   var current = new Date;
   var hour= current.getHours();
+  
+  if (maxFreq==1){
+    monitor.push(timings[1]);
+  }else if (maxFreq==2){
+    monitor.push(timings[0]);
+    monitor.push(timings[2]);
+  }
+  else{
+    monitor==timings;
+  }
+  //console.log(timings.indexOf("1200"));
+  if (hour in monitor){
+    var index= timings.indexOf(hour);// 0 mapped to 1 and 3, 1 mapped to 2,3, 3 mapped to all
+    //some pill needs to be dispensed (Expired, PillA, PillB, PillC, Liquid, Meal)
+    var dataStr="0,1,3,0,15,0" 
+  }
 }
 
 wss1.on("connection", function connection(socket) {
@@ -110,7 +141,7 @@ wss1.on("connection", function connection(socket) {
           dataState[3].refill(parseData.refill);
           break;  
       }
-    }else if (parseData.type=="setting"){
+    }else if (parseData.type=="setting"){ // {type:"setting", refill: [string, string ,string]}
       timings= parseData.timings;
     }
   })
