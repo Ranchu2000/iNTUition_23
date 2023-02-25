@@ -18,7 +18,7 @@ const users = new Set();
 const ESP32  = new Set();
 
 class pillState{
-  constructor(name, history){
+  constructor(name){
     this.name=name;
     this.tracking=false;
     this.count=0;
@@ -26,7 +26,7 @@ class pillState{
     this.timing=[]
     this.dispenseQty=2;
     this.meal=false;
-    this.history=history; //{hour:qty taken}-- just 1 month
+    this.history={}; //{hour:qty taken}-- just 1 month
   }
   track(count,freq,dispenseQty,meal){
     this.tracking=true;
@@ -52,38 +52,35 @@ class pillState{
   }
   updateTiming(){
     if (this.freq==1){
-      timing.push(this.timings[1]);
+      this.timing.push(timings[1]);
     }else if (this.freq==2){
-      timing.push(this.timings[0]);
-      timing.push(this.timings[2]);
+      this.timing.push(timings[0]);
+      this.timing.push(timings[2]);
     }else{
-      timing=timings;
+      this.timing=timings;
     }
   }
 }
 var dataState=[]; //4 x pillStates
-dataState.push(new pillState("Pill_A", {"1,1": 2, "1,2": 2, "1,3": 1, "1,4": 0, "1,5": 2,}));
-dataState.push(new pillState("Pill_B", {"1,1": 3, "1,2": 1, "1,3": 3, "1,4": 3, "1,5": 2,}));
-dataState.push(new pillState("Pill_C", {"1,1": 2, "1,2": 2, "1,3": 2, "1,4": 1, "1,5": 2,}));
-dataState.push(new pillState("Liquid", {"1,1": 4, "1,2": 1, "1,3": 4, "1,4": 3, "1,5": 2,}));
-dataState[1].track(30, 3, 2, false)
+dataState.push(new pillState("Pill_A"));
+dataState.push(new pillState("Pill_B"));
+dataState.push(new pillState("Pill_C"));
+dataState.push(new pillState("Liquid"));
 
 
 function mainLogic(){
 //logic for pill dispensing
-  var tracking=true; //false by default
+  console.log('running');
+  var tracking=false; 
   for (var i=0; i<dataState.length; i++){
     if (dataState[i].track){
       tracking==true;
     }
   }
-  console.log('running');
   var pillToDispense=[false, false, false, false];
-  var expiredTime=0;
-  if (tracking){
+  if (tracking){  
       var current = new Date;
       var hour= current.getHours();
-      expiredTime=current.getTime()+ 2 * 60 * 60 * 1000;
       if (hour in timings){
         var Pill_A=0;
         var Pill_B=0;
@@ -94,7 +91,7 @@ function mainLogic(){
           Pill_A=dataState[0].dispenseQty;
           pillToDispense[0]=true;
           if (dataState[0].meal){
-            meal=true;
+            meal=true; 
           }
         }else if (hour in dataState[1].timing && dataState[1].tracking){
           Pill_B=dataState[1].dispenseQty;
@@ -115,16 +112,11 @@ function mainLogic(){
             meal=true;
           }
         }
-        meal= meal?1:0;
+        meal= meal?1:0; //need 1 to be set to true to trigger meal condition
         var message= "0" + "," + Pill_A.toString() + ","+ Pill_B.toString() + ","+ Pill_C.toString()+ ","+ Liquid.toString()+ ","+ meal.toString()
         informESP32(message);
       }
     }
-  var now = new Date;
-  if (tracking && now.getTime()>expiredTime){
-    var expired= "1,0,0,0,0,0";
-    informESP32(expired);
-  }
   setTimeout(mainLogic, 5000);
 }
 mainLogic();
@@ -155,7 +147,7 @@ wss1.on("connection", function connection(socket) {
           dataState[3].track(parseData.count, parseData.freq, parseData.dispenseQty, parseData.meal);
           break;  
       }
-    }else if (parseData.type=="refill"){ //data sent is to refill pills==> ONE AT A TIME {type:"refill", refill: qty}
+    }else if (parseData.type==="refill"){ //data sent is to refill pills==> ONE AT A TIME {type:"refill", refill: qty}
       switch (parseData.name){
         case "A":
           dataState[0].refill(parseData.refill);
@@ -175,10 +167,10 @@ wss1.on("connection", function connection(socket) {
       for (var i=0; i<dataState.length; i++){
         dataState[i].updateTiming();
       }
-    }else if (parseData.type==="demo"){ //demo function
+    }else if (parseData.type==="demo"){
       informESP32("0,2,3,1,8,1");
       for (var i=0; i<dataState.length; i++){
-        dataState[i].dispense();
+        dataState[i].updateTiming();
       }
     }
   })
@@ -186,7 +178,7 @@ wss1.on("connection", function connection(socket) {
 
 wss2.on("connection", function connection(ws) {
   console.log("wss2:: socket connection ");
-  users.add(ws);
+  ESP32.add(ws);
   ws.on('message', function message(data) {
     for (var i=0; i<pillToDispense.length; i++){
       if (pillToDispense[i]){
