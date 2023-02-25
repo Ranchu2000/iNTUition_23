@@ -4,7 +4,7 @@ import { WebSocketServer } from "ws";
 
 //configurables
 var timings=["0800","1200","1800"];
-
+var pillToDispense=[false, false, false, false];
 // Create the https server
 const server = createServer();
 // Create two instance of the websocket server
@@ -77,7 +77,7 @@ function mainLogic(){
       tracking==true;
     }
   }
-  var pillToDispense=[false, false, false, false];
+  pillToDispense=[false, false, false, false];
   if (tracking){  
       var current = new Date;
       var hour= current.getHours();
