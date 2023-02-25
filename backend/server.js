@@ -5,6 +5,7 @@ import { WebSocketServer } from "ws";
 //configurables
 var timings=["0800","1200","1800"];
 var pillToDispense=[false, false, false, false];
+var tracking=false;
 // Create the https server
 const server = createServer();
 // Create two instance of the websocket server
@@ -71,7 +72,7 @@ dataState.push(new pillState("Liquid"));
 function mainLogic(){
 //logic for pill dispensing
   console.log('running');
-  var tracking=false; 
+  tracking=false; 
   for (var i=0; i<dataState.length; i++){
     if (dataState[i].track){
       tracking==true;
