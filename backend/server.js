@@ -76,7 +76,7 @@ function mainLogic(){
       tracking==true;
     }
   }
-  console.log('run');
+  console.log('running');
   var pillToDispense=[false, false, false, false];
   var expiredTime=0;
   if (tracking){
@@ -119,6 +119,11 @@ function mainLogic(){
         informESP32(message);
       }
     }
+  var now = new Date;
+  if (tracking && now.getTime()>expiredTime){
+    var expired= "1,0,0,0,0,0";
+    informESP32(expired);
+  }
   setTimeout(mainLogic, 5000);
 }
 mainLogic();
@@ -184,8 +189,6 @@ wss2.on("connection", function connection(ws) {
       }
     }
     tracking=false;
-     //console.log(now.getDay()); need to handle dispensing- need to send for whcih pills
-     //informESP32(ws,"text");
   });
 });
 
@@ -206,10 +209,8 @@ server.on("upgrade", function upgrade(request, socket, head) {
   }
 });
 
-//Open the server port in 8080
 server.listen(8080);
 
-//function to send websocket messages to user
 const sendData = () => {
   var data= JSON.stringify(dataState)
   console.log(data);
