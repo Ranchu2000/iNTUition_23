@@ -24,6 +24,16 @@ const AddMedicine = () => {
         alert('Please add a frequency')
         return
       }
+      if (freq > 3 || freq < 0) {
+          alert('Frequency should betwen 0-3 only')
+          return
+      }
+      if (dose <= 0) {
+          alert('Dose should be at least 1')
+          return
+      }
+
+      console.log(name, isLiquid, dose, freq, beforeMeal)
 
       setName('')
       setIsLiquid(false)
@@ -36,7 +46,7 @@ const AddMedicine = () => {
     <div className='add-medicine-page-container'>
         <AddMedHeader title='Add New Medicine'/>
 
-        <form className='add-medicine-form'>
+        <form className='add-medicine-form' onSubmit={onSubmit}>
 
             <div className='form-control'>
                 <label>Medicine Name</label>
