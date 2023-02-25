@@ -169,10 +169,15 @@ wss1.on("connection", function connection(socket) {
           dataState[3].refill(parseData.refill);
           break;  
       }
-    }else if (parseData.type=="setting"){ // {type:"setting", refill: [string, string ,string]}
+    }else if (parseData.type==="setting"){ // {type:"setting", refill: [string, string ,string]}
       timings= parseData.timings;
       for (var i=0; i<dataState.length; i++){
         dataState[i].updateTiming();
+      }
+    }else if (parseData.type==="demo"){ //demo function
+      informESP32("0,2,3,1,8,1");
+      for (var i=0; i<dataState.length; i++){
+        dataState[i].dispense();
       }
     }
   })
