@@ -110,7 +110,7 @@ void setup()
     delay(100);
   }
   USE_SERIAL.printf("Connected to Wifi!");
-  webSocket.begin("192.168.31.7", 8080, "/sendSensorData"); //look at wifi settings to obtain
+  webSocket.begin("192.168.31.54", 8080, "/sendSensorData"); //look at wifi settings to obtain
   webSocket.onEvent(webSocketEvent);
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
