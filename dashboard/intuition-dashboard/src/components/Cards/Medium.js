@@ -10,9 +10,9 @@ const Medium = () => {
         <h3 className='card-title'>
             Medicine
         </h3>
-        <div className='add-medicine'>
+        <div className='add-medicine-prompt'>
             <FaPlusSquare size={25} color='#50C878'/>
-            <span className='add-medicine-text'>Add Medicine</span>
+            <span className='add-medicine-prompt-text'>Add Medicine</span>
         </div>
         <div className='card-container'>
             <SubContainer isLiquid={false} name='Panadol' qty={2} timesperday={2}/>
