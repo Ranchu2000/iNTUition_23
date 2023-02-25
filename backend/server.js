@@ -42,8 +42,8 @@ class pillState{
     this.count-=this.dispenseQty;
     var current = new Date;
     var month= current.getMonth();
-    var hour= current.getHours();
-    var key= month+','+hour;
+    var day= current.getDate();
+    var key= month+','+day;
     if (key in this.history){
       this.history[key]+=1;
     }else{
@@ -183,6 +183,7 @@ wss2.on("connection", function connection(ws) {
         pillToDispense[i]=false;
       }
     }
+    tracking=false;
      //console.log(now.getDay()); need to handle dispensing- need to send for whcih pills
      //informESP32(ws,"text");
   });
