@@ -446,3 +446,18 @@ input:checked + .slider:before {
   padding-left: 10px;
   opacity: 50%;
 }
+
+.p-3 {
+  margin-left: 20px;
+}
+
+.graph-header {
+  font: inherit;
+  margin-top: 70px;
+  margin-left: 50px;
+}
+
+.justify-content-md-center {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

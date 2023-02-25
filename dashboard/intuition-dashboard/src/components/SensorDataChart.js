@@ -103,11 +103,9 @@ const SensorChart = () => {
   //Display the chart using rechart.js
   return (
     <Container className="p-3">
+        <h1 className="graph-header">Real time IOT Sensor Data</h1>
       <Row className="justify-content-md-center">
-        <h1 className="header">Real time IOT Sensor Data Using Websockets</h1>
-      </Row>
-      <Row className="justify-content-md-center">
-        <div style={{ width: 1000, height: 400 }}>
+        <div style={{ width: 500, height: 200 }}>
           <ResponsiveContainer>
             <LineChart
               width={400}
