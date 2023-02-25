@@ -24,8 +24,10 @@ const SensorChart = () => {
     // Sends a trigger payload to the Node backend to prompt the server to return data from the ESP32
     // Return data is an array of 4 JS objects
     const dat = {type: "import",}
+    const demo = {type: "demo",}
     ws.current.onopen = (event) => {
       ws.current.send(JSON.stringify(dat))
+      ws.current.send(JSON.stringify())
     }
 
     ws.current.onmessage = (ev) => {

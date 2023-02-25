@@ -453,11 +453,18 @@ input:checked + .slider:before {
 
 .graph-header {
   font: inherit;
-  margin-top: 70px;
+  margin-top: 20px;
   margin-left: 50px;
 }
 
 .justify-content-md-center {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+.large-header {
+  display: flex;
+  width: 100%;
+  background: red;
+  height: 50px;
 }
