@@ -172,6 +172,7 @@ wss1.on("connection", function connection(socket) {
           break;  
       }
     }else if (parseData.type==="setting"){ // {type:"setting", refill: [string, string ,string]}
+      console.log(`Timings: ${parseData.refill}`)
       timings= parseData.timings;
       for (var i=0; i<dataState.length; i++){
         dataState[i].updateTiming();
