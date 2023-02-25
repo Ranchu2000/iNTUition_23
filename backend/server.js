@@ -58,7 +58,7 @@ dataState.push(new pillState("Liquid"));
 
 //logic for pill dispensing
 var tracking=false;
-for (var i=0; i<dataState.length(); i++){
+for (var i=0; i<dataState.length; i++){
   if (dataState[i].track){
     tracking==true;
     break;
