@@ -4,13 +4,37 @@
 #include <WiFiClientSecure.h>
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
-//#include <stdlib.h>
-
 #include<map>
-//#include<string>
+#include <LiquidCrystal_I2C.h>
+#include <Stepper.h>
+
+#define RELAY_PIN 27 // ESP32 pin GIOP27, which connects to the IN pin of relay
+#define BUTTON_PIN 18
+#define PRIME_TIME 10000 
+#define DEBOUNCE_TIME 50
+#define IN1 19
+#define IN2 23
+#define IN3 5
+#define IN4 4
+
+//set up steps per revolution
+const int stepsPerRevolution=2048; // need to change based on requirement @shawn
 
 WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
+// set the LCD number of columns and rows
+int lcdColumns = 16;
+int lcdRows = 2;
+
+// debounce mitigation for switch
+int lastSteadyState = LOW;
+int lastFlickerableState=LOW;
+int currentState;
+unsigned long lastDebounceTime=0;
+
+
+// set LCD address, number of columns and rows
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
 
 bool taken= false;
 bool due= false;
@@ -24,6 +48,9 @@ const char * WIFI_PASS = "spaghetti";
 
 //Initialize the JSON data we send to our websocket server
 const int capacity = JSON_OBJECT_SIZE(3);
+
+// initialize the stepper library
+Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
 
 #define USE_SERIAL Serial
 
@@ -47,7 +74,7 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     break;
   case WStype_TEXT:
     USE_SERIAL.printf("[WSc] get text: %s\n", payload);
-    interpretMessage(payload);
+    interpretMessage(payload); // either dispense or dont dispense medicine
     break;
   case WStype_BIN:
     USE_SERIAL.printf("[WSc] get binary length: %u\n", length);
@@ -87,6 +114,21 @@ void setup()
   webSocket.onEvent(webSocketEvent);
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
+
+    // initialize digital pin GIOP27 as an output.
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  // set the speed at 5 rpm
+  myStepper.setSpeed(5);
+  // initialize LCD
+  lcd.init();
+  // turn on LCD backlight                      
+  lcd.backlight();
+  lcd.setCursor(0,0);
+  lcd.print("Startup");
+  delay(2000);
+  lcd.clear();
+  prime();
 
 }
 
@@ -128,6 +170,7 @@ void interpretMessage(uint8_t * payload)
   pillC=data[3];
   liquid=data[4];
   meal=data[5];
+  int toDispense=0;
 
   if (!due){
     toDispense = timeForMedNotif();
@@ -138,16 +181,54 @@ void interpretMessage(uint8_t * payload)
 
   if (toDispense){
     // dispense all pills according to data above
+    deliverDose(liquid); // dispense the liquid
+    deliverPill(); // dispense all pills (still need to edit)
+  }
+  else{
+    Serial.println("not dispensed");
   }
 
 }
 
 int timeForMedNotif(){
+  taken=0;
   //Serial.printf("dispensing"); //use values of pillA, pillB, pillC and liquid
   if (meal){
     //print warning to eat first
     Serial.println("Press dispense if you have eaten.");
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Food required.");
+    lcd.setCursor(0,1);
+    lcd.print("Dispense?");
+
   }
+  int count = 0;
+
+  while(!taken and count<10000000){ // about 10-15 seconds
+      currentState = digitalRead(BUTTON_PIN);
+     if (currentState!= lastFlickerableState){
+    lastDebounceTime=millis();
+    lastFlickerableState=currentState;
+  }
+
+  if ((millis()-lastDebounceTime) > DEBOUNCE_TIME) {
+    if (lastSteadyState==HIGH && currentState == LOW){
+      Serial.println("Button Press");
+      taken=1;
+    }
+    else if (lastSteadyState==LOW && currentState==HIGH){
+      Serial.println("Button release");
+    }
+    lastSteadyState = currentState;
+  }
+    count++;
+  }
+
+  lcd.clear();
+  
+   
+ 
 
   if (taken){
     //dispense all pills accordingly
@@ -155,13 +236,61 @@ int timeForMedNotif(){
     messageServer();
     return 1;
   }
+  else{
+    return 0;
+
+  }
+
+}
+
+void deliverPill(){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Pill dispense...");
+  myStepper.step(stepsPerRevolution);
+  delay(1000);
+  lcd.clear();
+  lcd.print("Pills dispensed.");
+  delay(1000);
+  lcd.clear();
 }
 
 
-void loop()
-{
-  if (due){
-    dispenseMed();
-  }
+void deliverDose(int dosage){
+  int timeOfOperation = 565 * dosage;
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Delivering Dose...");
+  Serial.println("Delivering Dose...");
+  digitalWrite(RELAY_PIN, HIGH);
+  delay(timeOfOperation);
+  digitalWrite(RELAY_PIN, LOW);
+  lcd.clear();
+  lcd.print("Dose Delivered.");
+  delay(1000);
+  lcd.clear();
+  Serial.println("Dose Delivered.");
+}
+
+void prime(){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("Priming...");
+  digitalWrite(RELAY_PIN, HIGH);
+  delay(PRIME_TIME);
+  digitalWrite(RELAY_PIN,LOW);
+  delay(5000);
+  Serial.println("Device has been primed.");
+  lcd.clear();
+  lcd.print("Primed.");
+  delay(1000);
+}
+
+void loop(){
+  currentState = digitalRead(BUTTON_PIN);
+//  interpretMessage(payload);
+  
+  lcd.setCursor(0,0);
+  lcd.print("Standby");
   webSocket.loop();
 } 
