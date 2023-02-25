@@ -5,14 +5,15 @@ import { WebSocketServer } from "ws";
 // Create the https server
 const server = createServer();
 // Create two instance of the websocket server
-//ws1: FrontEnd to WebSocketServer
 
+//ws1: FrontEnd to WebSocketServer
 //ws2: ESP32 to WebSocketServer
 const wss1 = new WebSocketServer({ noServer: true });
 const wss2 = new WebSocketServer({ noServer: true });
 
 // Take note of client or users connected
 const users = new Set();
+
 
 /*For the first connection "/request" path
  We take note of the clients that initiated connection and saved it in our list
@@ -34,17 +35,20 @@ wss1.on("connection", function connection(socket) {
 */
 wss2.on("connection", function connection(ws) {
   console.log("wss2:: socket connection ");
+  //ESP32.add(ws);
+  informESP32(ws,"text");
   ws.on('message', function message(data) {
       const now = Date.now();
-      //const parseData = JSON.parse(data); //from ESP32 taken: true
-      console.log(now)
-      //let info={date: now, taken: parseData.taken}
-      //let message = { date: now, sensorData: parseData.value };
-      //const jsonMessage = JSON.stringify(message);
-      //console.log(JSON.stringify(parseData))
+      //const parseData = JSON.parse(data);
+      //var data= parseData.split();
+      
+      //let taken={date: now}
       //sendMessage(jsonMessage);
       //save history into database?
+     console.log(now);
+     //informESP32(ws,"text");
   });
+
 });
 
 
@@ -80,3 +84,8 @@ const sendMessage = (message) => {
   }
 };
 
+function informESP32(ws, message){
+  var dataStr="0,1,3,0,15,0"
+  ws.send(JSON.stringify(dataStr));
+  return;
+}

@@ -23,11 +23,8 @@ const char * WIFI_PASS = "yufei12345";
 
 //Initialize the JSON data we send to our websocket server
 const int capacity = JSON_OBJECT_SIZE(3);
-StaticJsonDocument<capacity> doc;
-StaticJsonDocument<capacity> test;
 
 #define USE_SERIAL Serial
-
 
 std::map<std::string,int> data;
 
@@ -49,6 +46,7 @@ void webSocketEvent(WStype_t type, uint8_t *payload, size_t length)
     break;
   case WStype_TEXT:
     USE_SERIAL.printf("[WSc] get text: %s\n", payload);
+    interpretMessage(payload);
     break;
   case WStype_BIN:
     USE_SERIAL.printf("[WSc] get binary length: %u\n", length);
@@ -89,15 +87,13 @@ void setup()
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
 
-
-  
-  //init data
-  data["expired"]=0;
+  //init data- TO BE REMOVED
+  data["expired"]=0; //1 is expired
   data["A"]=1;
   data["B"]=3;
   data["C"]=0;
   data["liquid"]=15;
-  data["meal"]=0;
+  data["meal"]=0; //1 is after meal
 }
 
 void messageServer()
@@ -108,9 +104,13 @@ void messageServer()
   }
 }
 
-void interpretMessage() 
+void interpretMessage(uint8_t * payload) 
 {
-  
+  //payload returns as (Expired, PillA, PillB, PillC, Liquid, Meal) "0,1,3,0,15,0"
+  char *ptr;
+  //Serial.printf("%s\n", (char *)payload);
+  ptr = strtok((char *)payload, ",");
+  Serial.println(String(ptr));
   //check expired- change due and load qty and meal
   if (data["expired"] != 1) {
     due=true;
@@ -131,13 +131,12 @@ void interpretMessage()
 }
 
 void dispenseMed(){
-  Serial.printf("dispensing"); //use values of pillA, pillB, pillC and liquid
+  //Serial.printf("dispensing"); //use values of pillA, pillB, pillC and liquid
   if (meal){
     //print warning to eat first
-    
   }
-  int randomNum= random(1,10); //wait for press
-  if (randomNum >5)//logic based on button pressed and time to take
+  int randomNum= random(1,10); //wait for press- use if not while
+  if (randomNum >0)//logic based on button pressed and time to take
   {
     taken=true; 
   }
@@ -151,8 +150,6 @@ void dispenseMed(){
 
 void loop()
 {
-  
-  interpretMessage();
   if (due){
     dispenseMed();
   }
