@@ -16,6 +16,11 @@
 #define IN2 23
 #define IN3 5
 #define IN4 4
+#define IN5 35
+#define IN6 32
+#define IN7 33
+#define IN8 25
+
 
 //set up steps per revolution
 const int stepsPerRevolution=2048; // need to change based on requirement @shawn
@@ -50,7 +55,9 @@ const char * WIFI_PASS = "spaghetti";
 const int capacity = JSON_OBJECT_SIZE(3);
 
 // initialize the stepper library
-Stepper myStepper(stepsPerRevolution, IN1, IN3, IN2, IN4);
+Stepper myStepperA(stepsPerRevolution, IN1, IN3, IN2, IN4);
+Stepper myStepperB(stepsPerRevolution, IN5, IN6, IN7, IN8);
+
 
 #define USE_SERIAL Serial
 
@@ -110,7 +117,7 @@ void setup()
     delay(100);
   }
   USE_SERIAL.printf("Connected to Wifi!");
-  webSocket.begin("192.168.31.54", 8080, "/sendSensorData"); //look at wifi settings to obtain
+  webSocket.begin("192.168.31.7", 8080, "/sendSensorData"); //look at wifi settings to obtain
   webSocket.onEvent(webSocketEvent);
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
@@ -119,7 +126,8 @@ void setup()
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   // set the speed at 5 rpm
-  myStepper.setSpeed(5);
+  myStepperA.setSpeed(10);
+  myStepperA.setSpeed(10);
   // initialize LCD
   lcd.init();
   // turn on LCD backlight                      
@@ -182,7 +190,8 @@ void interpretMessage(uint8_t * payload)
   if (toDispense){
     // dispense all pills according to data above
     deliverDose(liquid); // dispense the liquid
-    deliverPill(); // dispense all pills (still need to edit)
+    deliverPillA(pillA); // dispense all pills
+    deliverPillB(pillB);
   }
   else{
     Serial.println("not dispensed");
@@ -203,9 +212,18 @@ int timeForMedNotif(){
     lcd.print("Dispense?");
 
   }
+  else{
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Med Time!");
+    lcd.setCursor(0,1);
+    lcd.print("Dispense?");
+  }
+
+  
   int count = 0;
 
-  while(!taken and count<10000000){ // about 10-15 seconds
+  while(!taken and count<50000000){ // about 10-15 seconds
       currentState = digitalRead(BUTTON_PIN);
      if (currentState!= lastFlickerableState){
     lastDebounceTime=millis();
@@ -243,17 +261,31 @@ int timeForMedNotif(){
 
 }
 
-void deliverPill(){
+void deliverPillA(int number){
   lcd.clear();
   lcd.setCursor(0,0);
-  lcd.print("Pill dispense...");
-  myStepper.step(stepsPerRevolution);
+  lcd.print("PillA dispense...");
+  myStepperA.step(stepsPerRevolution * number);
   delay(1000);
   lcd.clear();
   lcd.print("Pills dispensed.");
   delay(1000);
   lcd.clear();
 }
+
+void deliverPillB(int number){
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("PillB dispense...");
+  myStepperB.step(stepsPerRevolution * number);
+  delay(1000);
+  lcd.clear();
+  lcd.print("Pills dispensed.");
+  delay(1000);
+  lcd.clear();
+}
+
+
 
 
 void deliverDose(int dosage){
