@@ -183,6 +183,11 @@ body {
   margin-top: 140px;
 }
 
+.medicine-meal {
+  position: absolute;
+  margin-top: 160px;
+}
+
 .wrapper {
   display: flex;
   justify-content: space-between;

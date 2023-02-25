@@ -1,6 +1,10 @@
 import AddMedHeader from "../components/AddMedHeader"
 import Button from "../components/Button"
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+var newMedicine = ''
+export {newMedicine}
 
 const AddMedicine = () => {
   const [name, setName] = useState('')
@@ -8,6 +12,7 @@ const AddMedicine = () => {
   const [dose, setDose] = useState(0)
   const [freq, setFreq] = useState(0)
   const [beforeMeal, setBeforeMeal] = useState(true)
+  const navigate = useNavigate()
 
   const onSubmit = (e) => {
       e.preventDefault()
@@ -33,13 +38,24 @@ const AddMedicine = () => {
           return
       }
 
-      console.log(name, isLiquid, dose, freq, beforeMeal)
+      const id = Math.floor(Math.random() * 10000) + 1
+      console.log(id, name, isLiquid, dose, freq, beforeMeal)
+      newMedicine = {
+          id: id,
+          name: name,
+          isLiquid: isLiquid,
+          qty: dose,
+          timerperday: freq,
+          score: -1,
+          beforeMeal: beforeMeal
+      }
 
       setName('')
       setIsLiquid(false)
       setDose(0)
       setFreq(0)
       setBeforeMeal(true)
+      navigate('/home')
   }
 
   return (
