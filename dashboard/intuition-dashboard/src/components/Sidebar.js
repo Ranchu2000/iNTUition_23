@@ -1,13 +1,13 @@
 import Profile from "./Profile"
-import MenuItem from "./MenuItem"
-import MenuItemActive from "./MenuItemActive"
+import MenuItemHome from "./MenuItemHome"
+import MenuItemAnalytics from "./MenuItemAnalytics"
 
 const Sidebar = () => {
   return (
     <div className='sidebar'>
         <Profile name='Adam Leech' tag='Software Engineer'/>
-        <MenuItemActive src='/images/home.png' title='Home'/>
-        <MenuItem src='/images/user.png' title='Account'/>
+        <MenuItemHome title='Home'/>
+        <MenuItemAnalytics title='Analytics'/>
     </div>
   )
 }

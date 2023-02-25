@@ -1,10 +1,10 @@
+import { FaDatabase } from 'react-icons/fa'
 
-
-const MenuItem = ({ src, title }) => {
+const MenuItemAnalytics = ({ title }) => {
   return (
     <div className='item'>
         <span className='icon-wrapper'>
-            <img src={src} className='item-icon'/>
+          <FaDatabase size={20}/>
         </span>
         <span className='item-title'>
             {title}
@@ -13,4 +13,4 @@ const MenuItem = ({ src, title }) => {
   )
 }
 
-export default MenuItem
+export default MenuItemAnalytics
