@@ -9,11 +9,12 @@ const Large = () => {
   const [night, setNight] = useState('')
   const ws = useRef()
   const timings = [morning, afternoon, night]
-  const payload = {type: "setting", refill: timings}
+  const payload = {type: "setting", timings: timings}
 
   const onSubmit = (e) => {
       e.preventDefault()
 
+      
       ws.current.send(JSON.stringify(payload))
       console.log('clicked')
       console.log(payload)
