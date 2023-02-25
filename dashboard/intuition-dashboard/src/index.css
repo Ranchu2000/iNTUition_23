@@ -485,6 +485,17 @@ input:checked + .slider:before {
   align-items: center;
 }
 
+.update-header {
+  display: flex;
+  margin-left: auto;
+  margin-right: 350px;
+}
+
 .card-header-btn {
   margin-left: auto;
+}
+
+.dispense-body {
+  margin-top: 20px;
+  margin-left: 50px;
 }
