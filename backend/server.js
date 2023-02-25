@@ -15,6 +15,7 @@ const wss2 = new WebSocketServer({ noServer: true });
 
 // Take note of client or users connected
 const users = new Set();
+const ESP32  = new Set();
 
 class pillState{
   constructor(name){
@@ -22,6 +23,7 @@ class pillState{
     this.tracking=false;
     this.count=0;
     this.freq=1;
+    this.timing=[]
     this.dispenseQty=2;
     this.meal=false;
     this.history={}; //{hour:qty taken}-- just 1 month
@@ -42,11 +44,20 @@ class pillState{
     var month= current.getMonth();
     var hour= current.getHours();
     var key= month+','+hour;
-    //console.log(current.getHours());
     if (key in this.history){
       this.history[key]+=1;
     }else{
       this.history[key]=1;
+    }
+  }
+  updateTiming(){
+    if (this.freq==1){
+      timing.push(this.timings[1]);
+    }else if (this.freq==2){
+      timing.push(this.timings[0]);
+      timing.push(this.timings[2]);
+    }else{
+      timing=timings;
     }
   }
 }
@@ -56,49 +67,61 @@ dataState.push(new pillState("Pill_B"));
 dataState.push(new pillState("Pill_C"));
 dataState.push(new pillState("Liquid"));
 
-//logic for pill dispensing
-var tracking=true;
-var maxFreq=0;
-var monitor=[];
-for (var i=0; i<dataState.length; i++){
-  if (dataState[i].freq==1 && dataState[i].track){
-    if (maxFreq==0){
-      maxFreq=1;
-    }
-  }else if (dataState[i].freq==2 && dataState[i].track){
-    if (maxFreq<=1){
-      maxFreq=2;
-    }
-  }else if (dataState[i].freq==3 && dataState[i].track){
-    if (maxFreq<=2){
-      maxFreq=3;
-    };
-  }
-  if (dataState[i].track){
-    tracking==true;
-  }
-}
 
-if (tracking){
-  var current = new Date;
-  var hour= current.getHours();
-  
-  if (maxFreq==1){
-    monitor.push(timings[1]);
-  }else if (maxFreq==2){
-    monitor.push(timings[0]);
-    monitor.push(timings[2]);
+function mainLogic(){
+//logic for pill dispensing
+  var tracking=true; //false by default
+  for (var i=0; i<dataState.length; i++){
+    if (dataState[i].track){
+      tracking==true;
+    }
   }
-  else{
-    monitor==timings;
-  }
-  //console.log(timings.indexOf("1200"));
-  if (hour in monitor){
-    var index= timings.indexOf(hour);// 0 mapped to 1 and 3, 1 mapped to 2,3, 3 mapped to all
-    //some pill needs to be dispensed (Expired, PillA, PillB, PillC, Liquid, Meal)
-    var dataStr="0,1,3,0,15,0" 
-  }
+  console.log('run');
+  var pillToDispense=[false, false, false, false];
+  var expiredTime=0;
+  if (tracking){
+      var current = new Date;
+      var hour= current.getHours();
+      expiredTime=current.getTime()+ 2 * 60 * 60 * 1000;
+      if (hour in timings){
+        var Pill_A=0;
+        var Pill_B=0;
+        var Pill_C=0;
+        var Liquid=0;
+        var meal= false;
+        if (hour in dataState[0].timing && dataState[0].tracking){
+          Pill_A=dataState[0].dispenseQty;
+          pillToDispense[0]=true;
+          if (dataState[0].meal){
+            meal=true;
+          }
+        }else if (hour in dataState[1].timing && dataState[1].tracking){
+          Pill_B=dataState[1].dispenseQty;
+          pillToDispense[1]=true;
+          if (dataState[1].meal){
+            meal=true;
+          }
+        }else if (hour in dataState[2].timing && dataState[2].tracking){
+          Pill_C=dataState[2].dispenseQty;
+          pillToDispense[2]=true;
+          if (dataState[2].meal){
+            meal=true;
+          }
+        }else if (hour in dataState[3].timing && dataState[3].tracking){
+          Liquid=dataState[3].dispenseQty;
+          pillToDispense[3]=true;
+          if (dataState[3].meal){
+            meal=true;
+          }
+        }
+        meal= meal?1:0;
+        var message= "0" + "," + Pill_A.toString() + ","+ Pill_B.toString() + ","+ Pill_C.toString()+ ","+ Liquid.toString()+ ","+ meal.toString()
+        informESP32(message);
+      }
+    }
+  setTimeout(mainLogic, 5000);
 }
+mainLogic();
 
 wss1.on("connection", function connection(socket) {
   console.log("wss1:: User connected");
@@ -143,17 +166,24 @@ wss1.on("connection", function connection(socket) {
       }
     }else if (parseData.type=="setting"){ // {type:"setting", refill: [string, string ,string]}
       timings= parseData.timings;
+      for (var i=0; i<dataState.length; i++){
+        dataState[i].updateTiming();
+      }
     }
   })
 });
 
 wss2.on("connection", function connection(ws) {
   console.log("wss2:: socket connection ");
-  //ESP32.add(ws);
-  informESP32(ws,"text");
+  users.add(ws);
   ws.on('message', function message(data) {
-      const now = Date.now();
-     console.log(now.getDay());
+    for (var i=0; i<pillToDispense.length; i++){
+      if (pillToDispense[i]){
+        pillState[i].dispense();
+        pillToDispense[i]=false;
+      }
+    }
+     //console.log(now.getDay()); need to handle dispensing- need to send for whcih pills
      //informESP32(ws,"text");
   });
 });
@@ -187,10 +217,11 @@ const sendData = () => {
   }
 };
 
-function informESP32(ws, message){
-  var dataStr="0,1,3,0,15,0"
-  ws.send(JSON.stringify(dataStr));
-  return;
+function informESP32(message){
+  console.log(message);
+  for (const ws of ESP32) {
+    ws.send(JSON.stringify(message));
+  }
 }
 
 function printInfo(){
