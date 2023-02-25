@@ -5,6 +5,9 @@ import { WebSocketServer } from "ws";
 // Create the https server
 const server = createServer();
 // Create two instance of the websocket server
+//ws1: FrontEnd to WebSocketServer
+
+//ws2: ESP32 to WebSocketServer
 const wss1 = new WebSocketServer({ noServer: true });
 const wss2 = new WebSocketServer({ noServer: true });
 
@@ -33,11 +36,14 @@ wss2.on("connection", function connection(ws) {
   console.log("wss2:: socket connection ");
   ws.on('message', function message(data) {
       const now = Date.now();
-
-      const parseData = JSON.parse(data);
-      let message = { date: now, sensorData: parseData.value };
-      const jsonMessage = JSON.stringify(message);
-      sendMessage(jsonMessage);
+      //const parseData = JSON.parse(data); //from ESP32 taken: true
+      console.log(now)
+      //let info={date: now, taken: parseData.taken}
+      //let message = { date: now, sensorData: parseData.value };
+      //const jsonMessage = JSON.stringify(message);
+      //console.log(JSON.stringify(parseData))
+      //sendMessage(jsonMessage);
+      //save history into database?
   });
 });
 
