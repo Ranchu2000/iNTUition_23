@@ -4,9 +4,10 @@
 #include <WiFiClientSecure.h>
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
+//#include <stdlib.h>
 
 #include<map>
-#include<string>
+//#include<string>
 
 WiFiMulti WiFiMulti;
 WebSocketsClient webSocket;
@@ -18,8 +19,8 @@ const int ANALOG_READ_PIN = 36; // or A0
 const int RESOLUTION = 12;      // Could be 9-12
 
 // CHANGE THIS TO ADD YOUR WIFI USERNAME/PASSWORD
-const char * WIFI_SSID = "YuFei";
-const char * WIFI_PASS = "yufei12345";
+const char * WIFI_SSID = "Xiaomi_7660";
+const char * WIFI_PASS = "spaghetti";
 
 //Initialize the JSON data we send to our websocket server
 const int capacity = JSON_OBJECT_SIZE(3);
@@ -82,68 +83,77 @@ void setup()
     delay(100);
   }
   USE_SERIAL.printf("Connected to Wifi!");
-  webSocket.begin("172.20.10.4", 8080, "/sendSensorData"); //look at wifi settings to obtain
+  webSocket.begin("192.168.31.7", 8080, "/sendSensorData"); //look at wifi settings to obtain
   webSocket.onEvent(webSocketEvent);
   // try ever 5000 again if connection has failed
   webSocket.setReconnectInterval(5000);
 
-  //init data- TO BE REMOVED
-  data["expired"]=0; //1 is expired
-  data["A"]=1;
-  data["B"]=3;
-  data["C"]=0;
-  data["liquid"]=15;
-  data["meal"]=0; //1 is after meal
 }
 
 void messageServer()
 {
-  if (due and taken){
     webSocket.sendTXT("taken"); //indicate to server pills have been issued
-    due=false;
-  }
 }
 
 void interpretMessage(uint8_t * payload) 
 {
   //payload returns as (Expired, PillA, PillB, PillC, Liquid, Meal) "0,1,3,0,15,0"
-  char *ptr;
-  //Serial.printf("%s\n", (char *)payload);
-  ptr = strtok((char *)payload, ",");
-  Serial.println(String(ptr));
-  //check expired- change due and load qty and meal
-  if (data["expired"] != 1) {
-    due=true;
-    pillA= data["A"];
-    pillB= data["B"];
-    pillC= data["C"];
-    liquid= data["liquid"];
-    if (data["meal"]==0){
-      meal=false; 
-    }
-    else{
-      meal=true;
-    }
+  int *data = (int*) malloc(sizeof(int)*6);
+
+  int num=0;
+  char *token = strtok((char*) payload, ",");
+  for (int i=1; token[i]!='\0';i++){
+    num = num*10 + (token[i]-48);
+  }
+
+  data[0] = num;
+  for (int i=1; i<5; i++){
+    token = strtok(NULL,",");
+    int num = 0;
+    for (int i = 0; token[i] != '\0'; i++) {
+      num = num * 10 + (token[i] - 48);
+      }
+      data[i] = num;
+
+  }
+  
+  token = strtok(NULL,",");
+  num = token[0]-48;
+
+  data[5] = num;
+
+  due=data[0];
+  pillA=data[1];
+  pillB=data[2];
+  pillC=data[3];
+  liquid=data[4];
+  meal=data[5];
+
+  if (!due){
+    toDispense = timeForMedNotif();
   }
   else{
-    due=false;
+    // pills overdue, dont dispense anything (ie do nothing)
   }
+
+  if (toDispense){
+    // dispense all pills according to data above
+  }
+
 }
 
-void dispenseMed(){
+int timeForMedNotif(){
   //Serial.printf("dispensing"); //use values of pillA, pillB, pillC and liquid
   if (meal){
     //print warning to eat first
+    Serial.println("Press dispense if you have eaten.");
   }
-  int randomNum= random(1,10); //wait for press- use if not while
-  if (randomNum >0)//logic based on button pressed and time to take
-  {
-    taken=true; 
-  }
+
   if (taken){
     //dispense all pills accordingly
     //notify server
     messageServer();
+    return 1;
   }
 }
 
