@@ -48,3 +48,64 @@ body {
   font-size: 14px;
 }
 
+.item {
+  display: block;
+  padding: 13px 30px 10px;
+  color: rgb(241, 237, 237);
+  font-size: 16px;
+  position: relative;
+}
+
+.item-active {
+  display: block;
+  padding: 13px 30px 10px;
+  color: rgb(241, 237, 237);
+  font-size: 16px;
+  position: relative;
+  background:white;
+  border-right: 2px solid rgb(5, 68, 104);
+}
+
+.item-title {
+  margin-left: 30px;
+}
+
+.icon-wrapper {
+  color: #dee4ec;
+  width: 30px;
+  display: inline-block;
+}
+
+.item-icon {
+  color: #dee4ec;
+  width: 30px;
+}
+
+.item-icon-active {
+  color: #dee4ec;
+  width: 30px;
+}
+
+.item:hover {
+  color: #0c7db1;
+  background:white;
+  border-right: 2px solid rgb(5, 68, 104);
+}
+
+.item-icon:hover {
+  color: #0c7db1;
+}
+
+.item:hover:before {
+  display: block;
+}
+
+.item-active:before {
+  display: block;
+}
+
+.item-title-active {
+  margin: 30px;
+  color: #1b1c1e;
+}
+
