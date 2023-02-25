@@ -78,7 +78,7 @@ wss1.on("connection", function connection(socket) {
   users.add(userRef);
   socket.on('message', function message (data){
     const parseData = JSON.parse(data);
-    if (parseData==="import"){ //{"import"}
+    if (parseData.type==="import"){ //{"import"}
       sendData(); //send import to get data
     }else if (parseData.type==="init"){ //data sent is to update State==> ONE AT A TIME {type:"init", count: qty, freq: qty, dispenseQty: qty, meal: bool}
       switch (parseData.name){
