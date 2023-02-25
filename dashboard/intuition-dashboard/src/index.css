@@ -154,10 +154,27 @@ body {
 }
 
 .card-subcontainer {
-  background: #3661eb;
-  opacity: 20%;
+  background: #8AC7DB;
   margin-top: 70px;
   margin-bottom: 20px;
   border-radius: 30px;
   width: 150px;
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: #ffffff;
+  padding-top: 10px;
+}
+
+.card-subcontainer:hover {
+  background: #338BA8;
+}
+
+.line-break {
+  width: 100%;
+}
+
+.card-subicon {
+  margin-bottom: 120px;
 }

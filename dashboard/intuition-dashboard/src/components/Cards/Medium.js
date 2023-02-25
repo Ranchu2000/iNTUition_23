@@ -11,10 +11,10 @@ const Medium = () => {
             Medicine
         </h3>
         <div className='card-container'>
-            <SubContainer />
-            <SubContainer />
-            <SubContainer />
-            <SubContainer />
+            <SubContainer type='Solid' isLiquid={false}/>
+            <SubContainer type='Solid' isLiquid={false}/>
+            <SubContainer type='Solid' isLiquid={false}/>
+            <SubContainer type='Liquid' isLiquid={true}/>
         </div>
     </div>
   )
