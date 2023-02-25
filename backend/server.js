@@ -151,6 +151,7 @@ wss1.on("connection", function connection(socket) {
           break;  
       }
     }else if (parseData.type==="refill"){ //data sent is to refill pills==> ONE AT A TIME {type:"refill", refill: qty}
+      console.log(`Refill: ${parseData.refill}`)
       switch (parseData.name){
         case "A":
           dataState[0].refill(parseData.refill);
@@ -165,7 +166,8 @@ wss1.on("connection", function connection(socket) {
           dataState[3].refill(parseData.refill);
           break;  
       }
-    }else if (parseData.type==="setting"){ // {type:"setting", refill: [string, string ,string]}
+    }else if (parseData.type==="setting"){ // {type:"setting", timings: [string, string ,string]}
+      console.log(`Timings: ${parseData.timings}`)
       timings= parseData.timings;
       for (var i=0; i<dataState.length; i++){
         dataState[i].updateTiming();
