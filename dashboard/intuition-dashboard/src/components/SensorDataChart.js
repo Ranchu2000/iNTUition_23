@@ -74,15 +74,12 @@ const SensorChart = () => {
       console.log(newDataArray);
       setData(newDataArray);
 
-      /* IDEAL VALUES FOR COMPARISON IN LINE CHART */
-      const ideal = message[1].freq * message[1].dispenseQty
-
       let plot = []
       for (let [key, value] of Object.entries(message[1].history)) {
         plot.push({
           date: [key],
-          total: [value],
-          idealTotal: ideal
+          AmountDispensed: [value],
+          ExpectedAmount: message[1].freq * message[1].dispenseQty
         })
       }
       console.log('PlotData populated')
@@ -110,11 +107,11 @@ const SensorChart = () => {
         <h1 className="header">Real time IOT Sensor Data Using Websockets</h1>
       </Row>
       <Row className="justify-content-md-center">
-        <div style={{ width: 500, height: 200 }}>
+        <div style={{ width: 1000, height: 400 }}>
           <ResponsiveContainer>
             <LineChart
-              width={800}
-              height={400}
+              width={400}
+              height={200}
               data={plotData}
               margin={{
                 top: 0,
@@ -130,19 +127,18 @@ const SensorChart = () => {
               <Legend />
               <Line
                 type="monotone"
-                dataKey="total"
+                dataKey="AmountDispensed"
                 stroke="#8884d8"
                 activeDot={{ r: 24 }}
-                strokeWidth="3"
+                strokeWidth="2"
               />
               <Line
                 type="monotone"
-                dataKey="idealTotal"
+                dataKey="ExpectedAmount"
                 stroke="red"
                 activeDot={{ r: 24 }}
-                strokeWidth="3"
+                strokeWidth="2"
               />
-              {/* <Line type="monotone" dataKey="uv" stroke="#82ca9d" /> */}
             </LineChart>
           </ResponsiveContainer>
         </div>

@@ -18,7 +18,7 @@ const users = new Set();
 const ESP32  = new Set();
 
 class pillState{
-  constructor(name){
+  constructor(name, history){
     this.name=name;
     this.tracking=false;
     this.count=0;
@@ -26,7 +26,7 @@ class pillState{
     this.timing=[]
     this.dispenseQty=2;
     this.meal=false;
-    this.history={}; //{hour:qty taken}-- just 1 month
+    this.history=history; //{hour:qty taken}-- just 1 month
   }
   track(count,freq,dispenseQty,meal){
     this.tracking=true;
@@ -62,10 +62,11 @@ class pillState{
   }
 }
 var dataState=[]; //4 x pillStates
-dataState.push(new pillState("Pill_A"));
-dataState.push(new pillState("Pill_B"));
-dataState.push(new pillState("Pill_C"));
-dataState.push(new pillState("Liquid"));
+dataState.push(new pillState("Pill_A", {"1,1": 2, "1,2": 2, "1,3": 1, "1,4": 0, "1,5": 2,}));
+dataState.push(new pillState("Pill_B", {"1,1": 3, "1,2": 1, "1,3": 3, "1,4": 3, "1,5": 2,}));
+dataState.push(new pillState("Pill_C", {"1,1": 2, "1,2": 2, "1,3": 2, "1,4": 1, "1,5": 2,}));
+dataState.push(new pillState("Liquid", {"1,1": 4, "1,2": 1, "1,3": 4, "1,4": 3, "1,5": 2,}));
+dataState[1].track(30, 3, 2, false)
 
 
 function mainLogic(){
