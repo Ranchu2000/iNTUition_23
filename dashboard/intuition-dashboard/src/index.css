@@ -496,6 +496,11 @@ input:checked + .slider:before {
 }
 
 .dispense-body {
+  display: flex;
   margin-top: 20px;
   margin-left: 50px;
+  height: 50px;
+  width: 240px;
+  justify-content: space-between;
 }
+

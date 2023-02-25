@@ -156,6 +156,7 @@ wss1.on("connection", function connection(socket) {
           break;  
       }
     }else if (parseData.type=="refill"){ //data sent is to refill pills==> ONE AT A TIME {type:"refill", refill: qty}
+      console.log(`Name: ${parseData.name}, Quantity of Refill: ${parseData.refill}`)
       switch (parseData.name){
         case "A":
           dataState[0].refill(parseData.refill);

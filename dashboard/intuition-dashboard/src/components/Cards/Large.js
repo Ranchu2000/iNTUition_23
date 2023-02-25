@@ -15,7 +15,8 @@ const Large = () => {
         </div>
         <SensorDataChart />
         <div className='dispense-body'>
-            <ButtonDispense text='Dispense Now' />
+            <ButtonDispense text='Dispense Now' payload={{type: 'demo'}} successMsg='Medicine successfully dispensed.' />
+            <ButtonDispense text='Refill' color='steelblue' payload={{type: 'refill', name: 'B', refill:10}} successMsg='Medicine successfully refilled.' />
         </div>
     </div>
   )

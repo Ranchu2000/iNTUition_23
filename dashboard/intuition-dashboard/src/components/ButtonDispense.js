@@ -1,16 +1,13 @@
 import PropTypes from 'prop-types';
 import { useEffect, useRef } from 'react'
 
-const ButtonDispense = ({ color, text }) => {
-  const successMsg = 'Medicine successfully dispensed.'
+const ButtonDispense = ({ color, text, payload, successMsg }) => {
   const ws = useRef()
-//   ws.current = new WebSocket("ws://localhost:8080/request");
-  const demo = {type: "demo",}
 
   const onClick = () => {
-    ws.current.send(JSON.stringify(demo))
+    ws.current.send(JSON.stringify(payload))
     console.log('clicked')
-    console.log(demo)
+    console.log(payload)
     alert(successMsg)
   }
 
