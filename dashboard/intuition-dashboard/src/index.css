@@ -71,7 +71,6 @@ body {
   font-size: 16px;
   position: relative;
   background:white;
-  border-right: 2px solid rgb(5, 68, 104);
 }
 
 .item-title {
@@ -117,4 +116,48 @@ body {
   color: #1b1c1e;
 }
 
+.hamburger:hover {
+  cursor: pointer;
+}
 
+.medium-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 270px;
+  margin-top: 20px;
+  width: 750px;
+  background: #ffffff;
+  height: 320px;
+  border-radius: 30px;
+}
+
+.card-icon {
+  padding-top: 20px;
+  padding-left: 30px;
+}
+
+.card-title {
+  font-weight: bolder;
+  font-size: 25px;
+  padding-top: 25px;
+  padding-left: 30px;
+}
+
+.card-container {
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  padding-top: 20px;
+  height: 300px;
+  width: 750px;
+}
+
+.card-subcontainer {
+  background: #3661eb;
+  opacity: 20%;
+  margin-top: 70px;
+  margin-bottom: 20px;
+  border-radius: 30px;
+  width: 150px;
+}
