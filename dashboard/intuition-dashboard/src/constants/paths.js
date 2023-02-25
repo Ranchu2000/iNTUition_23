@@ -1,5 +1,5 @@
 const PATHS = {
-    LANDING: "/home",
+    LANDING: '/home',
 }
 
 export default PATHS;
