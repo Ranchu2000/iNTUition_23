@@ -2,6 +2,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import MediumContainer from "../components/Cards/Medium";
 import SmallContainer from "../components/Cards/Small"
+import LargeContainer from "../components/Cards/Large"
 
 function Landing() {
   return (
@@ -11,6 +12,7 @@ function Landing() {
             <div className='wrapper'>
                 <MediumContainer />
                 <SmallContainer />
+                <LargeContainer />
             </div>
       </>
   )

@@ -1,4 +1,4 @@
-import { FaPills } from 'react-icons/fa'
+import { FaPills, FaPlusSquare } from 'react-icons/fa'
 import SubContainer from './SubContainer'
 
 const Medium = () => {
@@ -10,6 +10,10 @@ const Medium = () => {
         <h3 className='card-title'>
             Medicine
         </h3>
+        <div className='add-medicine-prompt'>
+            <FaPlusSquare size={25} color='#50C878'/>
+            <span className='add-medicine-prompt-text'>Add Medicine</span>
+        </div>
         <div className='card-container'>
             <SubContainer isLiquid={false} name='Panadol' qty={2} timesperday={2}/>
             <SubContainer isLiquid={false} name='Zyrtec' qty={1} timesperday={3}/>

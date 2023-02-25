@@ -139,8 +139,8 @@ body {
 .card-title {
   font-weight: bolder;
   font-size: 25px;
-  padding-top: 25px;
-  padding-left: 30px;
+  padding-top: 20px;
+  padding-left: 25px;
 }
 
 .card-container {
@@ -199,13 +199,12 @@ body {
 .wrapper {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .small-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   margin-top: 20px;
   margin-right: 40px;
   width: 350px;
@@ -214,6 +213,236 @@ body {
   border-radius: 30px;
 }
 
-.donutchart {
+.donutchart-container {
+  position: absolute;
+  display: flex;
+  margin-top: 75px;
+  margin-left: 65px;
+  cursor: pointer;
+}
+
+.large-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-left: 270px;
+  margin-top: 20px;
+  width: 100%;
+  margin-right: 40px;
+  background: #ffffff;
+  height: 320px;
+  border-radius: 30px;
+}
+
+.add-medicine-prompt {
+  display: flex;
+  margin-left: 380px;
+  margin-top: 25px;
+  height: 26px;
+  padding: 3px;
+}
+
+.add-medicine-prompt-text {
+  padding-left: 10px;
+  color: #50C878;
+}
+
+.add-medicine-page-container {
+  max-width: 500px;
+  margin: 30px auto;
+  overflow: auto;
+  min-height: 300px;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.add-medicine-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  background: green;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.btn:hover {
+  background: black;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+  margin-top: 50px;
+  border-radius: 20px;
+}
+
+.add-medicine-form {
+  margin-bottom: 40px;
+}
+
+.form-control {
+  margin: 20px 0;
+}
+
+.form-control label {
+  display: block;
+}
+
+.form-control input {
+  width: 90%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
+  border-radius: 10px;
+  border: none;
+}
+
+.form-control-dose {
+  margin: 20px 0;
+}
+
+.form-control-dose label {
+  display: block;
+}
+
+.form-control-dose input {
+  width: 15%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
+  border-radius: 10px;
+  border: none;
+}
+
+.form-control-freq {
+  margin: 20px 0;
+}
+
+.form-control-freq label {
+  display: block;
+}
+
+.form-control-freq input {
+  width: 15%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
+  border-radius: 10px;
+  border: none;
+}
+
+.form-control-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-control-check label {
+  flex: 1;
+}
+
+.form-control-check input {
+  flex: 1;
+  height: 20px;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
   margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+#is-liquid {
+  opacity: 30%;
+}
+
+#dosage-unit {
+  padding-left: 10px;
+  opacity: 50%;
+}
+
+#freq-tag {
+  padding-left: 10px;
+  opacity: 50%;
 }
