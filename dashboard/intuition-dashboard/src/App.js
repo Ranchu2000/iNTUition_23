@@ -1,10 +1,14 @@
-import Header from './components/Header'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import P from './constants/paths'
+import Landing from './pages/Landing'
 
 function App() {
   return (
-    <div className="App">
-      <Header title="Welcome, Wayne!"/>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path={P.LANDING} element={<Landing />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
