@@ -22,7 +22,7 @@ const ButtonDispense = ({ color, text, payload, successMsg }) => {
 
   return (
     <div 
-        className='btn'
+        className='btn-dispense'
         style={{ backgroundColor: color }}
         onClick={onClick}
     >

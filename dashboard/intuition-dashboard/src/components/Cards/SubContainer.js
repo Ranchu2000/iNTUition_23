@@ -1,8 +1,19 @@
 import { FaTablets, FaWater } from 'react-icons/fa'
+import { useState } from 'react'
+
+var taken = 90
+export {taken}
 
 const SubContainer = ({ medicine }) => {
+  const [taken, setTaken] = useState(90)
+
+  const onClick = () => {
+    setTaken(medicine.score)
+    console.log(`Selected score of ${taken}`)
+  }
+
   return (
-    <div className='card-subcontainer'>
+    <div className='card-subcontainer' onClick={onClick}>
         <p className='medicine-name'>{medicine.name}</p>
         <div className='line-break'></div>
         <p>Type: {medicine.isLiquid ? 'Liquid' : 'Pill'}</p>

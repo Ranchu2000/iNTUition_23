@@ -1,7 +1,9 @@
 import DonutChartSVG from "./DonutChartSVG"
 import { FaChartBar } from 'react-icons/fa'
+import { taken } from './SubContainer.js'
 
 const Small = () => {
+
   return (
     <div className='small-container'>
         <span className='card-icon'>
@@ -11,7 +13,7 @@ const Small = () => {
             Analytics
         </h3>
         <div className='donutchart-container'>
-            <DonutChartSVG />
+            <DonutChartSVG val={taken} />
         </div>
     </div>
   )

@@ -15,6 +15,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
+    "state-pool": "^0.9.0",
     "ws": "^8.4.0"
   },
   "devDependencies": {
