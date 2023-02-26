@@ -1,14 +1,21 @@
 import DonutChart from 'react-donut-chart'
+import { useState, useEffect } from 'react'
 
-const DonutChartSVG = () => {
+const DonutChartSVG = ({ val }) => {
+  const [value, setValue] = useState(0)
+  
+  useEffect(() => {
+    setValue(val)
+  }, [val])
+
   const data = [
       {
           label: 'Taken on time',
-          value: 90,
+          value: value,
       },
       {
           label: 'Late/Missed',
-          value: 10,
+          value: 100-value,
           isEmpty: true,
       }
     ]

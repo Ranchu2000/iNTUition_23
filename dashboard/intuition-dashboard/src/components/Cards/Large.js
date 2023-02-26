@@ -46,11 +46,10 @@ const Large = () => {
         </div>
         <SensorDataChart />
         <div className='dispense-body'>
+            <span className='timing-title'>Medicine not dispensed? Manually dispense here</span>
             <ButtonDispense text='Dispense Now' payload={{type: 'demo'}} successMsg='Medicine successfully dispensed.' />
+            <span className='timing-title-btm'>Track your refills here</span>
             <ButtonDispense text='Refill' color='steelblue' payload={{type: 'refill', name: 'B', refill:10}} successMsg='Medicine successfully refilled.' />
-            <div className='timing-body'>
-                <span className='timing-title'>Space</span>
-            </div>
         </div>
         <div className='setting-body'>
             <span className='setting-title'>Configure dosage timings</span>
