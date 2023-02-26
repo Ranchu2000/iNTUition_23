@@ -14,11 +14,16 @@ Arduino
 
 # Getting Started
 git clone this repo
-run npm install within both the root and intuition-dashboard directory
-run npm run dev in the root directory to run both the front end and backend
+
+run `npm install` within both the root and intuition-dashboard directory
+
+run `npm run dev` in the root directory to run both the front end and backend
 
 # Usage
-locate your computer's IP address via ipconfig (Wireless LAN adapter WiFi)
+locate your computer's IP address via `ipconfig` (Wireless LAN adapter WiFi)
+
 replace your computer's IP address and WiFi credentials into the hardware/main.ino file
+
 load the main.ino file into a ESP32 module
+
 connect ESP32 modules with its components according to the provided schema
