@@ -27,3 +27,5 @@ replace your computer's IP address and WiFi credentials into the hardware/main.i
 load the main.ino file into a ESP32 module
 
 connect ESP32 modules with its components according to the provided schema
+
+<a href="https://devpost.com/software/medispense?ref_content=user-portfolio&ref_feature=in_progress" target="_blank">Link to Devpost</a>
